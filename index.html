@@ -309,29 +309,34 @@
     </div>
 
     <script>
-        <script>
-        /* --- 제조만당 보안 로직 시작 --- */
-        (function() {
-            const password = prompt("제조만당 Fleet 솔루션 보안을 위해 비밀번호를 입력해주세요.");
-            const correctPassword = "123"; // 👈 사장님께 알려줄 비밀번호로 수정하세요.
+<script>
+    /* --- 제조만당 보안 로직 시작 --- */
+    (function() {
+        const correctPassword = "님만의비밀번호123"; // 실제 비밀번호로 변경하세요
+        let password = prompt("제조만당 Fleet 솔루션 보안을 위해 비밀번호를 입력해주세요.");
 
-            if (password !== correctPassword) {
-                alert("비밀번호가 일치하지 않습니다. 접근 권한이 없습니다.");
-                document.documentElement.innerHTML = `
-                    <div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#1a1a2e; color:#ff5252; font-family:sans-serif;">
-                        <div style="text-align:center;">
-                            <h1>🚫 접근 권한 없음</h1>
-                            <p style="color:#b0b0b0;">비밀번호가 틀렸습니다. 관리자에게 문의하세요.</p>
-                        </div>
-                    </div>`;
-                window.stop(); 
-                throw new Error("Invalid Password");
-            }
-        })();
-        /* --- 제조만당 보안 로직 끝 --- */
+        // 사용자가 취소를 누르거나 빈 값을 입력한 경우를 포함하여 체크
+        if (password === null || password.trim() === "" || password !== correctPassword) {
+            alert("비밀번호가 일치하지 않거나 입력되지 않았습니다.");
+            
+            // 화면 전체를 차단 레이아웃으로 교체
+            document.documentElement.innerHTML = `
+                <div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#1a1a2e; color:#ff5252; font-family:sans-serif; flex-direction:column;">
+                    <h1>🚫 접근 권한 없음</h1>
+                    <p style="color:#b0b0b0; margin-top:10px;">관리자에게 부여받은 올바른 비밀번호를 입력해야 합니다.</p>
+                    <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; cursor:pointer;">다시 시도하기</button>
+                </div>`;
+            
+            window.stop(); 
+            throw new Error("Invalid or Empty Password Access Attempt");
+        }
+    })();
+    /* --- 제조만당 보안 로직 끝 --- */
 
-        // 샘플 데이터 (실제 운영시 Google Sheets에서 불러옴)
-        const sampleVehicles = [
+    // 이후 데이터 로직 시작
+    const sampleVehicles = [ /* 기존 데이터를 여기에 이어서 넣으세요 */ ];
+</script>
+
         // 샘플 데이터 (실제 운영시 Google Sheets에서 불러옴)
         const sampleVehicles = [
             {
