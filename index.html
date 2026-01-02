@@ -115,4 +115,15 @@
             new Chart(cCtx, { type: 'bar', data: { labels: ['11월', '12월'], datasets: [{ label: '운영비', data: [950, 1200], backgroundColor: '#ff5252' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#fff' } } }, scales: { y: { grid: { color: '#333' }, ticks: { color: '#fff' } }, x: { grid: { color: '#333' }, ticks: { color: '#fff' } } } } });
         }
 
-        document.addEventListener('DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', () => {
+            renderVehicles();
+            renderBatteries();
+            renderCharts();
+        });
+    </script>
+    <footer style="text-align: center; padding: 40px; color: #888; font-size: 0.8em; border-top: 1px solid rgba(255,255,255,0.1);">
+        <p>© 2026 제조만당(Jejomandang). All Rights Reserved.</p>
+        <p>사업자등록번호: 235-14-02687 | 운영 전문가 한범석 (Fleet Operations)</p>
+    </footer>
+</body>
+</html>
