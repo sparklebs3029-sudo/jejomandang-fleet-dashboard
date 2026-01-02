@@ -59,68 +59,106 @@
             <div class="chart-container"><canvas id="costChart"></canvas></div>
         </div>
     </div>
-    <script>
-        (function() {
-            const correctPassword = "1234";
-            let password = prompt("제조만당 Fleet 솔루션 보안을 위해 비밀번호를 입력해주세요.");
-            if (password !== correctPassword) {
-                alert("비밀번호가 일치하지 않습니다.");
-                document.documentElement.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#1a1a2e; color:#ff5252;"><h1>🚫 접근 권한 없음</h1></div>`;
-                window.stop();
-            }
-        })();
-
-        const sampleVehicles = [
-            { id: 'V001', name: '1톤 트럭 A', mileage: 45280, maintenanceDays: 15, fuelCost: 850000, status: 'good' },
-            { id: 'V002', name: '2.5톤 트럭 B', mileage: 67540, maintenanceDays: 3, fuelCost: 1250000, status: 'warning' },
-            { id: 'V003', name: '5톤 트럭 C', mileage: 89320, maintenanceDays: -2, fuelCost: 1780000, status: 'alert' },
-            { id: 'V004', name: '밴 D', mileage: 23450, maintenanceDays: 28, fuelCost: 620000, status: 'good' }
-        ];
-
-        const sampleBatteries = [
-            { vehicle: '1톤 트럭 A', level: 85, voltage: 12.6, current: 45, replaceDate: '2025-08-15' },
-            { vehicle: '2.5톤 트럭 B', level: 62, voltage: 12.2, current: 38, replaceDate: '2025-04-20' },
-            { vehicle: '5톤 트럭 C', level: 35, voltage: 11.8, current: 25, replaceDate: '2025-02-10' },
-            { vehicle: '밴 D', level: 92, voltage: 12.8, current: 52, replaceDate: '2025-10-05' }
-        ];
-
-        function renderVehicles() {
-            const grid = document.getElementById('vehicleGrid');
-            if (!grid) return;
-            grid.innerHTML = '';
-            sampleVehicles.forEach(v => {
-                const card = document.createElement('div');
-                card.className = 'vehicle-card';
-                card.innerHTML = `<div class="vehicle-header"><div class="vehicle-name">${v.name}</div><div class="vehicle-status status-${v.status}">${v.status === 'good' ? '정상' : '주의'}</div></div><div class="vehicle-info"><div class="info-item"><div class="info-label">주행거리</div><div class="info-value">${v.mileage.toLocaleString()} km</div></div><div class="info-item"><div class="info-label">정비 잔여일</div><div class="info-value">${v.maintenanceDays > 0 ? v.maintenanceDays : 0}일</div></div></div>`;
-                grid.appendChild(card);
-            });
+<script>
+    /* --- 제조만당 보안 로직 --- */
+    (function() {
+        const correctPassword = "1234"; 
+        let password = prompt("제조만당 Fleet 솔루션 보안을 위해 비밀번호를 입력해주세요.");
+        if (password !== correctPassword) {
+            alert("비밀번호가 일치하지 않습니다.");
+            document.documentElement.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#1a1a2e; color:#ff5252; flex-direction:column;"><h1>🚫 접근 권한 없음</h1><button onclick="location.reload()" style="margin-top:20px; padding:10px 20px;">다시 시도</button></div>`;
+            window.stop(); throw new Error("Access Denied");
         }
+    })();
 
-        function renderBatteries() {
-            const grid = document.getElementById('batteryGrid');
-            if (!grid) return;
-            grid.innerHTML = '';
-            sampleBatteries.forEach(b => {
-                const card = document.createElement('div');
-                card.className = 'battery-card';
-                card.innerHTML = `<h3 style="color:#ffc107; margin-bottom:10px;">${b.vehicle}</h3><div class="battery-level"><div class="battery-bar-container"><div class="battery-bar" style="width:${b.level}%">${b.level}%</div></div></div><p style="text-align:center; font-size:0.9em; color:#888;">교체예정: ${b.replaceDate}</p>`;
-                grid.appendChild(card);
-            });
-        }
+    /* --- 데이터 정의 --- */
+    const sampleVehicles = [
+        { id: 'V001', name: '1톤 트럭 A', mileage: 45280, maintenanceDays: 15, fuelCost: 850000, status: 'good' },
+        { id: 'V002', name: '2.5톤 트럭 B', mileage: 67540, maintenanceDays: 3, fuelCost: 1250000, status: 'warning' },
+        { id: 'V003', name: '5톤 트럭 C', mileage: 89320, maintenanceDays: -2, fuelCost: 1780000, status: 'alert' },
+        { id: 'V004', name: '밴 D', mileage: 23450, maintenanceDays: 28, fuelCost: 620000, status: 'good' }
+    ];
 
-        function renderCharts() {
-            const bCtx = document.getElementById('batteryChart').getContext('2d');
-            new Chart(bCtx, { type: 'line', data: { labels: ['D-2', 'D-1', 'Today'], datasets: [{ label: 'Voltage', data: [12.6, 12.5, 12.6], borderColor: '#00d4ff', tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#fff' } } }, scales: { y: { grid: { color: '#333' }, ticks: { color: '#fff' } }, x: { grid: { color: '#333' }, ticks: { color: '#fff' } } } } });
-            const cCtx = document.getElementById('costChart').getContext('2d');
-            new Chart(cCtx, { type: 'bar', data: { labels: ['11월', '12월'], datasets: [{ label: '운영비', data: [950, 1200], backgroundColor: '#ff5252' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#fff' } } }, scales: { y: { grid: { color: '#333' }, ticks: { color: '#fff' } }, x: { grid: { color: '#333' }, ticks: { color: '#fff' } } } } });
-        }
+    const sampleBatteries = [
+        { vehicle: '1톤 트럭 A', level: 85, voltage: 12.6, current: 45, replaceDate: '2025-08-15' },
+        { vehicle: '2.5톤 트럭 B', level: 62, voltage: 12.2, current: 38, replaceDate: '2025-04-20' },
+        { vehicle: '5톤 트럭 C', level: 35, voltage: 11.8, current: 25, replaceDate: '2025-02-10' },
+        { vehicle: '밴 D', level: 92, voltage: 12.8, current: 52, replaceDate: '2025-10-05' }
+    ];
 
-        document.addEventListener('DOMContentLoaded', () => {
-            renderVehicles();
-            renderBatteries();
-            renderCharts();
+    // [중요] 차량별 월간 유지비 데이터 구조로 변경
+    const monthlyCosts = {
+        labels: ['1월', '2월', '3월', '4월', '5월', '6월'],
+        vehicles: [
+            { name: '1톤 트럭 A', costs: [120, 135, 128, 145, 130, 140], color: '#00d4ff' },
+            { name: '2.5톤 트럭 B', costs: [250, 240, 265, 255, 270, 280], color: '#ffc107' },
+            { name: '5톤 트럭 C', costs: [450, 480, 420, 510, 460, 490], color: '#ff5252' },
+            { name: '밴 D', costs: [95, 102, 98, 110, 105, 108], color: '#00ff88' }
+        ]
+    };
+
+    /* --- 렌더링 함수들 --- */
+    function renderVehicles() {
+        const grid = document.getElementById('vehicleGrid');
+        grid.innerHTML = '';
+        sampleVehicles.forEach(v => {
+            const card = document.createElement('div');
+            card.className = 'vehicle-card';
+            card.innerHTML = `<div class="vehicle-header"><div class="vehicle-name">${v.name}</div><div class="vehicle-status status-${v.status}">${v.status === 'good' ? '정상' : '주의'}</div></div><div class="vehicle-info"><div class="info-item"><div class="info-label">주행거리</div><div class="info-value">${v.mileage.toLocaleString()} km</div></div><div class="info-item"><div class="info-label">정비 잔여일</div><div class="info-value">${v.maintenanceDays > 0 ? v.maintenanceDays : 0}일</div></div></div>`;
+            grid.appendChild(card);
         });
-    </script>
+    }
+
+    function renderBatteries() {
+        const grid = document.getElementById('batteryGrid');
+        grid.innerHTML = '';
+        sampleBatteries.forEach(b => {
+            const card = document.createElement('div');
+            card.className = 'battery-card';
+            card.innerHTML = `<h3 style="color:#ffc107; margin-bottom:10px;">${b.vehicle}</h3><div class="battery-level"><div class="battery-bar-container"><div class="battery-bar" style="width:${b.level}%">${b.level}%</div></div></div>`;
+            grid.appendChild(card);
+        });
+    }
+
+    function renderCharts() {
+        // 배터리 전압 차트
+        const bCtx = document.getElementById('batteryChart').getContext('2d');
+        new Chart(bCtx, { type: 'line', data: { labels: ['D1', 'D2', 'D3'], datasets: [{ label: 'Voltage', data: [12.6, 12.5, 12.6], borderColor: '#00d4ff' }] }, options: { responsive: true, maintainAspectRatio: false } });
+
+        // [핵심 수정] 차량별 유지비 차트
+        const cCtx = document.getElementById('costChart').getContext('2d');
+        const datasets = monthlyCosts.vehicles.map(v => ({
+            label: v.name,
+            data: v.costs,
+            backgroundColor: v.color + 'B3', // 70% 투명도
+            borderColor: v.color,
+            borderWidth: 2
+        }));
+
+        new Chart(cCtx, {
+            type: 'bar',
+            data: { labels: monthlyCosts.labels, datasets: datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { 
+                    legend: { labels: { color: '#fff' } },
+                    title: { display: true, text: '차량별 월간 통합 유지비 (만원)', color: '#00d4ff', font: { size: 16 } }
+                },
+                scales: {
+                    y: { stacked: true, grid: { color: '#333' }, ticks: { color: '#fff' } }, // 누적 차트로 설정하여 전체 비용도 보이게 함
+                    x: { stacked: true, grid: { color: '#333' }, ticks: { color: '#fff' } }
+                }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderVehicles();
+        renderBatteries();
+        renderCharts();
+    });
+</script>
     <footer style="text-align: center; padding: 40px; color: #888; font-size: 0.8em; border-top: 1px solid rgba(255,255,255,0.1);">
         <p>© 2026 제조만당(Jejomandang). All Rights Reserved.</p>
         <p>사업자등록번호: 235-14-02687 | 운영 전문가 한범석 (Fleet Operations)</p>
